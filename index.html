@@ -3,619 +3,269 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مراجعة شاملة - لغة إنجليزية صف 6</title>
+    <title>مراجعة اللغة الإنجليزية - الصف السادس</title>
     <style>
+        /* إعدادات الخلفية والتصميم السائل (Liquid Glass) */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1f4068, #162447, #0f1a1c);
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
             overflow-x: hidden;
+            position: relative;
         }
 
+        /* الأشكال السائلة في الخلفية (Liquid Blobs) */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 1;
+            animation: float 10s ease-in-out infinite alternate;
+        }
+
+        body::before {
+            width: 400px;
+            height: 400px;
+            background: rgba(0, 221, 255, 0.4);
+            top: -10%;
+            left: -10%;
+        }
+
+        body::after {
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 0, 128, 0.3);
+            bottom: -10%;
+            right: -10%;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 50px) scale(1.2); }
+        }
+
+        /* الحاوية الزجاجية الرئيسية */
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
+            width: 100%;
+            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            color: #fff;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+            position: relative;
         }
 
         header {
             text-align: center;
-            color: white;
             margin-bottom: 40px;
-            animation: fadeInDown 1s ease;
         }
 
         header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background: linear-gradient(90deg, #00ddff, #ff0080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
+            color: #ccc;
+            font-size: 1.1rem;
         }
 
-        /* Liquid Glass Effect */
-        .liquid-glass {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            padding: 30px;
+        /* أقسام النماذج */
+        .exam-model {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 25px;
             margin-bottom: 30px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .liquid-glass::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: liquidFlow 8s infinite linear;
-            pointer-events: none;
-        }
-
-        @keyframes liquidFlow {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .liquid-glass:hover {
+        .exam-model:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.5);
-            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 221, 255, 0.1);
+            background: rgba(255, 255, 255, 0.06);
         }
 
-        .model-section {
-            animation: fadeInUp 0.8s ease;
-        }
-
-        .model-title {
-            color: white;
-            font-size: 1.8rem;
+        .exam-model h2 {
+            color: #00ddff;
             margin-bottom: 20px;
-            text-align: center;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+            font-size: 1.6rem;
+        }
+
+        .section-title {
+            color: #ff0080;
+            margin: 15px 0 10px 0;
+            font-weight: bold;
+            font-size: 1.2rem;
         }
 
         .question {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .question h3 {
-            color: #fff;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-right: 4px solid #00ddff;
         }
 
         .question p {
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 15px;
-            line-height: 1.6;
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+            direction: ltr;
+            text-align: left;
         }
 
         .options {
-            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            direction: ltr;
+            text-align: left;
+            margin-top: 5px;
         }
 
-        .options li {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 12px 20px;
-            margin: 8px 0;
-            border-radius: 10px;
+        .options label {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 12px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .options li:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateX(-5px);
-        }
-
-        .options li.selected {
-            background: rgba(76, 175, 80, 0.6);
-            border-color: rgba(76, 175, 80, 0.8);
-        }
-
-        .options li.correct {
-            background: rgba(76, 175, 80, 0.8);
-            border-color: rgba(76, 175, 80, 1);
-        }
-
-        .options li.incorrect {
-            background: rgba(244, 67, 54, 0.8);
-            border-color: rgba(244, 67, 54, 1);
-        }
-
-        .btn {
-            background: linear-gradient(45deg, #4CAF50, #45a049);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.1rem;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: block;
-            margin: 20px auto;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
-
-        .score-display {
-            text-align: center;
-            color: white;
-            font-size: 2rem;
-            margin: 20px 0;
-            display: none;
-            animation: pulse 1s ease;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .floating-shapes {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .shape {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: float 20s infinite ease-in-out;
-        }
-
-        .shape:nth-child(1) {
-            width: 100px;
-            height: 100px;
-            top: 10%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .shape:nth-child(2) {
-            width: 150px;
-            height: 150px;
-            top: 60%;
-            left: 80%;
-            animation-delay: -5s;
-        }
-
-        .shape:nth-child(3) {
-            width: 80px;
-            height: 80px;
-            top: 40%;
-            left: 30%;
-            animation-delay: -10s;
-        }
-
-        .shape:nth-child(4) {
-            width: 120px;
-            height: 120px;
-            top: 80%;
-            left: 60%;
-            animation-delay: -15s;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            25% {
-                transform: translate(20px, 20px) rotate(90deg);
-            }
-            50% {
-                transform: translate(-20px, 40px) rotate(180deg);
-            }
-            75% {
-                transform: translate(20px, -20px) rotate(270deg);
-            }
-        }
-
-        .tabs {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 12px 30px;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-        }
-
-        .tab-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .tab-btn.active {
-            background: rgba(76, 175, 80, 0.6);
-            border-color: rgba(76, 175, 80, 0.8);
-        }
-
-        .model-content {
-            display: none;
-        }
-
-        .model-content.active {
+            transition: background 0.2s;
             display: block;
         }
 
-        footer {
-            text-align: center;
-            color: white;
-            margin-top: 40px;
-            padding: 20px;
-            opacity: 0.8;
+        .options label:hover {
+            background: rgba(0, 221, 255, 0.2);
+        }
+
+        .options input {
+            margin-right: 8px;
+        }
+
+        /* التعديل للهواتف */
+        @media (max-width: 768px) {
+            .container { padding: 20px; }
+            header h1 { font-size: 1.8rem; }
+            .exam-model h2 { font-size: 1.3rem; }
         }
     </style>
 </head>
 <body>
-    <div class="floating-shapes">
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div>
 
     <div class="container">
         <header>
-            <h1>📚 مراجعة شاملة - لغة إنجليزية</h1>
-            <p>صف 6 ابتدائي - نماذج امتحانات شاملة</p>
+            <h1>المراجعة الشاملة للامتحان النهائي</h1>
+            <p>مادة اللغة الإنجليزية - الصف السادس الابتدائي</p>
         </header>
 
-        <div class="tabs">
-            <button class="tab-btn active" onclick="showModel(1)">النموذج الأول</button>
-            <button class="tab-btn" onclick="showModel(2)">النموذج الثاني</button>
-            <button class="tab-btn" onclick="showModel(3)">النموذج الثالث</button>
-        </div>
-
         <!-- النموذج الأول -->
-        <div id="model1" class="model-content active">
-            <div class="liquid-glass model-section">
-                <h2 class="model-title">النموذج الأول - المراجعة الشاملة</h2>
-                
-                <div class="question" data-correct="b">
-                    <h3>Question 1: Choose the correct answer</h3>
-                    <p>My father _____ to work every day.</p>
-                    <ul class="options">
-                        <li onclick="selectOption(this)">a) go</li>
-                        <li onclick="selectOption(this)">b) goes</li>
-                        <li onclick="selectOption(this)">c) going</li>
-                        <li onclick="selectOption(this)">d) went</li>
-                    </ul>
+        <div class="exam-model">
+            <h2>النموذج الأول: التركيز على القواعد والأزمنة (Grammar Focus)</h2>
+            
+            <div class="section-title">Part 1: Reading & Grammar</div>
+            
+            <div class="question">
+                <p>1. Yesterday, Ali ________ to the beautiful tech museum.</p>
+                <div class="options">
+                    <label><input type="radio" name="q1"> go</label>
+                    <label><input type="radio" name="q1"> went</label>
+                    <label><input type="radio" name="q1"> goes</label>
                 </div>
+            </div>
 
-                <div class="question" data-correct="a">
-                    <h3>Question 2: Choose the correct answer</h3>
-                    <p>They _____ football yesterday.</p>
-                    <ul class="options">
-                        <li onclick="selectOption(this)">a) played</li>
-                        <li onclick="selectOption(this)">b) play</li>
-                        <li onclick="selectOption(this)">c) plays</li>
-                        <li onclick="selectOption(this)">d) playing</li>
-                    </ul>
+            <div class="question">
+                <p>2. Look! The birds ________ in the clear blue sky right now.</p>
+                <div class="options">
+                    <label><input type="radio" name="q2"> are flying</label>
+                    <label><input type="radio" name="q2"> flies</label>
+                    <label><input type="radio" name="q2"> flew</label>
                 </div>
+            </div>
 
-                <div class="question" data-correct="c">
-                    <h3>Question 3: Choose the correct answer</h3>
-                    <p>This is _____ book. It's very interesting.</p>
-                    <ul class="options">
-                        <li onclick="selectOption(this)">a) me</li>
-                        <li onclick="selectOption(this)">b) I</li>
-                        <li onclick="selectOption(this)">c) my</li>
-                        <li onclick="selectOption(this)">d) mine</li>
-                    </ul>
+            <div class="section-title">Part 2: Vocabulary</div>
+            <div class="question">
+                <p>3. A person who designs smart websites and apps is a ________.</p>
+                <div class="options">
+                    <label><input type="radio" name="q3"> programmer</label>
+                    <label><input type="radio" name="q3"> doctor</label>
+                    <label><input type="radio" name="q3"> chef</label>
                 </div>
-
-                <div class="question" data-correct="b">
-                    <h3>Question 4: Choose the correct answer</h3>
-                    <p>_____ you like some tea?</p>
-                    <ul class="options">
-                        <li onclick="selectOption(this)">a) Do</li>
-                        <li onclick="selectOption(this)">b) Would</li>
-                        <li onclick="selectOption(this)">c) Are</li>
-                        <li onclick="selectOption(this)">d) Is</li>
-                    </ul>
-                </div>
-
-                <div class="question" data-correct="d">
-                    <h3>Question 5: Choose the correct answer</h3>
-                    <p>The cat is _____ the table.</p>
-                    <ul class="options">
-                        <li onclick="selectOption(this)">a) in</li>
-                        <li onclick="selectOption(this)">b) at</li>
-                        <li onclick="selectOption(this)">c) to</li>
-                        <li onclick="selectOption(this)">d) under</li>
-                    </ul>
-                </div>
-
-                <button class="btn" onclick="checkAnswers(1)">تصحيح الإجابات</button>
-                <div class="score-display" id="score1"></div>
             </div>
         </div>
 
         <!-- النموذج الثاني -->
-        <div id="model2" class="model-content">
-            <div class="liquid-glass model-section">
-                <h2 class="model-title">النموذج الثاني - المراجعة الشاملة</h2>
-                
-                <div class="question" data-correct="a">
-                    <h3>Question 1: Choose the correct answer</h3>
-                    <p>She _____ her homework now.</p>
-                    <ul class="options">
-                        <li onclick="selectOption(this)">a) is doing</li>
-                        <li onclick="selectOption(this)">b) does</li>
-                        <li onclick="selectOption(this)">c) do</li>
-                        <li onclick="selectOption(this)">d) did</li>
-                    </ul>
+        <div class="exam-model">
+            <h2>النموذج الثاني: استيعاب المقروء والمفردات (Reading & Vocabulary)</h2>
+            
+            <div class="section-title">Part 1: Reading Comprehension</div>
+            <div class="question">
+                <p style="text-align: justify; font-style: italic; color: #eee; margin-bottom: 15px;">
+                    "Robots are becoming very important in 2026. They help doctors in hospitals, clean our smart homes, and even drive autonomous cars safely."
+                </p>
+                <p>1. Where do robots help doctors according to the text?</p>
+                <div class="options">
+                    <label><input type="radio" name="q4"> In schools</label>
+                    <label><input type="radio" name="q4"> In hospitals</label>
+                    <label><input type="radio" name="q4"> In parks</label>
                 </div>
+            </div>
 
-                <div class="question" data-correct="c">
-                    <h3>Question 2: Choose the correct answer</h3>
-                    <p>We _____ to the park last Friday.</p>
-                    <ul class="options">
-                        <li onclick="selectOption(this)">a) go</li>
-                        <li onclick="selectOption(this)">b) goes</li>
-                        <li onclick="selectOption(this)">c) went</li>
-                        <li onclick="selectOption(this)">d) going</li>
-                    </ul>
+            <div class="section-title">Part 2: Language Functions</div>
+            <div class="question">
+                <p>2. Which word describes something that costs a lot of money?</p>
+                <div class="options">
+                    <label><input type="radio" name="q5"> Cheap</label>
+                    <label><input type="radio" name="q5"> Expensive</label>
+                    <label><input type="radio" name="q5"> Easy</label>
                 </div>
-
-                <div class="question" data-correct="b">
-                    <h3>Question 3: Choose the correct answer</h3>
-                    <p>These are _____ pencils.</p>
-                    <ul class="options">
-                        <li onclick="selectOption(this)">a) their</li>
-                        <li onclick="selectOption(this)">b) our</li>
-                        <li onclick="selectOption(this)">c) us</li>
-                        <li onclick="selectOption(this)">d) we</li>
-                    </ul>
-                </div>
-
-                <div class="question" data-correct="d">
-                    <h3>Question 4: Choose the correct answer</h3>
-                    <p>_____ many students are there in your class?</p>
-                    <ul class="options">
-                        <li onclick="selectOption(this)">a) What</li>
-                        <li onclick="selectOption(this)">b) When</li>
-                        <li onclick="selectOption(this)">c) Where</li>
-                        <li onclick="selectOption(this)">d) How</li>
-                    </ul>
-                </div>
-
-                <div class="question" data-correct="a">
-                    <h3>Question 5: Choose the correct answer</h3>
-                    <p>I have _____ apple and _____ orange.</p>
-                    <ul class="options">
-                        <li onclick="selectOption(this)">a) an / an</li>
-                        <li onclick="selectOption(this)">b) a / a</li>
-                        <li onclick="selectOption(this)">c) an / a</li>
-                        <li onclick="selectOption(this)">d) a / an</li>
-                    </ul>
-                </div>
-
-                <button class="btn" onclick="checkAnswers(2)">تصحيح الإجابات</button>
-                <div class="score-display" id="score2"></div>
             </div>
         </div>
 
         <!-- النموذج الثالث -->
-        <div id="model3" class="model-content">
-            <div class="liquid-glass model-section">
-                <h2 class="model-title">النموذج الثالث - المراجعة الشاملة</h2>
-                
-                <div class="question" data-correct="c">
-                    <h3>Question 1: Choose the correct answer</h3>
-                    <p>Look! The birds _____ in the sky.</p>
-                    <ul class="options">
-                        <li onclick="selectOption(this)">a) fly</li>
-                        <li onclick="selectOption(this)">b) flew</li>
-                        <li onclick="selectOption(this)">c) are flying</li>
-                        <li onclick="selectOption(this)">d) flies</li>
-                    </ul>
+        <div class="exam-model">
+            <h2>النموذج الثالث: مهارات الكتابة والتعبير (Writing & Spelling)</h2>
+            
+            <div class="section-title">Part 1: Spelling & Punctuation</div>
+            <div class="question">
+                <p>1. Choose the correct spelling for the missing word: "We need to protect our ________."</p>
+                <div class="options">
+                    <label><input type="radio" name="q6"> envaironment</label>
+                    <label><input type="radio" name="q6"> environment</label>
+                    <label><input type="radio" name="q6"> enviroment</label>
                 </div>
+            </div>
 
-                <div class="question" data-correct="b">
-                    <h3>Question 2: Choose the correct answer</h3>
-                    <p>My brother _____ watch TV yesterday.</p>
-                    <ul class="options">
-                        <li onclick="selectOption(this)">a) don't</li>
-                        <li onclick="selectOption(this)">b) didn't</li>
-                        <li onclick="selectOption(this)">c) doesn't</li>
-                        <li onclick="selectOption(this)">d) isn't</li>
-                    </ul>
+            <div class="question">
+                <p>2. Choose the sentence with the correct punctuation:</p>
+                <div class="options">
+                    <label><input type="radio" name="q7"> where is the english exam.</label>
+                    <label><input type="radio" name="q7"> Where is the English exam?</label>
+                    <label><input type="radio" name="q7"> where is the English exam?</label>
                 </div>
-
-                <div class="question" data-correct="d">
-                    <h3>Question 3: Choose the correct answer</h3>
-                    <p>Is this _____ bag? Yes, it's _____.</p>
-                    <ul class="options">
-                        <li onclick="selectOption(this)">a) your / my</li>
-                        <li onclick="selectOption(this)">b) you / mine</li>
-                        <li onclick="selectOption(this)">c) yours / my</li>
-                        <li onclick="selectOption(this)">d) your / mine</li>
-                    </ul>
-                </div>
-
-                <div class="question" data-correct="a">
-                    <h3>Question 4: Choose the correct answer</h3>
-                    <p>_____ is your birthday? It's in July.</p>
-                    <ul class="options">
-                        <li onclick="selectOption(this)">a) When</li>
-                        <li onclick="selectOption(this)">b) Where</li>
-                        <li onclick="selectOption(this)">c) What</li>
-                        <li onclick="selectOption(this)">d) Who</li>
-                    </ul>
-                </div>
-
-                <div class="question" data-correct="c">
-                    <h3>Question 5: Choose the correct answer</h3>
-                    <p>There _____ some water in the bottle.</p>
-                    <ul class="options">
-                        <li onclick="selectOption(this)">a) are</li>
-                        <li onclick="selectOption(this)">b) be</li>
-                        <li onclick="selectOption(this)">c) is</li>
-                        <li onclick="selectOption(this)">d) were</li>
-                    </ul>
-                </div>
-
-                <button class="btn" onclick="checkAnswers(3)">تصحيح الإجابات</button>
-                <div class="score-display" id="score3"></div>
             </div>
         </div>
 
-        <footer>
-            <p>© 2024 - مراجعة اللغة الإنجليزية للصف السادس</p>
-            <p>تم التصميم بتقنية Liquid Glass</p>
-        </footer>
     </div>
 
-    <script>
-        function showModel(modelNum) {
-            // Hide all models
-            document.querySelectorAll('.model-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // Remove active class from all tabs
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Show selected model
-            document.getElementById('model' + modelNum).classList.add('active');
-            
-            // Add active class to selected tab
-            event.target.classList.add('active');
-            
-            // Reset scores
-            document.querySelectorAll('.score-display').forEach(score => {
-                score.style.display = 'none';
-            });
-            
-            // Reset all selections
-            document.querySelectorAll('.options li').forEach(option => {
-                option.classList.remove('selected', 'correct', 'incorrect');
-            });
-        }
-
-        function selectOption(element) {
-            // Remove selected class from siblings
-            const parent = element.parentElement;
-            parent.querySelectorAll('li').forEach(li => {
-                li.classList.remove('selected');
-            });
-            
-            // Add selected class to clicked element
-            element.classList.add('selected');
-        }
-
-        function checkAnswers(modelNum) {
-            const model = document.getElementById('model' + modelNum);
-            const questions = model.querySelectorAll('.question');
-            let correctCount = 0;
-            let answeredCount = 0;
-            
-            questions.forEach(question => {
-                const selectedOption = question.querySelector('.options li.selected');
-                const correctAnswer = question.getAttribute('data-correct');
-                const options = question.querySelectorAll('.options li');
-                
-                // Remove previous result classes
-                options.forEach(option => {
-                    option.classList.remove('correct', 'incorrect');
-                });
-                
-                if (selectedOption) {
-                    answeredCount++;
-                    const selectedText = selectedOption.textContent.trim();
-                    const selectedLetter = selectedText.charAt(0);
-                    
-                    // Check if correct
-                    if (selectedLetter === correctAnswer) {
-                        selectedOption.classList.add('correct');
-                        correctCount++;
-                    } else {
-                        selectedOption.classList.add('incorrect');
-                        // Show correct answer
-                        options.forEach(option => {
-                            const optionText = option.textContent.trim();
-                            if (optionText.charAt(0) === correctAnswer) {
-                                option.classList.add('correct');
-                            }
-                        });
-                    }
-                }
-            });
-            
-            // Display score
-            const scoreDisplay = document.getElementById('score' + modelNum);
-            const percentage = answeredCount > 0 ? Math.round((correctCount / questions.length) * 100) : 0;
-            scoreDisplay.textContent = `النتيجة: ${correctCount} من ${questions.length} (${percentage}%)`;
-            scoreDisplay.style.display = 'block';
-        }
-    </script>
 </body>
 </html>
