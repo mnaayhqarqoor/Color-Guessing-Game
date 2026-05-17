@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; base-uri 'self'; form-action 'self';">
+    <meta name="description" content="F1 Ultimate Racing Quiz - اختبر معرفتك بسباق الفورمولا 1">
+    <meta name="theme-color" content="#e10600">
+    
+    <title>F1 Ultimate Racing Quiz | مسابقة الفورمولا 1 الكبرى</title>
+
+    <style>
+        /* 
+         * PERFORMANCE & RESET 
+         * Optimized for 60FPS on mobile and desktop
+         */
+        :root {
+            --f1-red: #e10600;
+            --f1-dark: #15151e;
+            --f1-neon: #ff003c;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-glow: 0 0 10px rgba(255, 255, 255, 0.5);
+            --neon-glow: 0 0 20px rgba(225, 6, 0, 0.6);
+            --success: #00ff9d;
+            --error: #ff0055;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--f1-dark);
+            color: #ffffff;
+            overflow: hidden; /* Prevent scroll during animations */
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+
+        /* 
+         * LIQUID BACKGROUND ANIMATION 
+         * GPU Accelerated using transform3d
+         */
+        .liquid-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            filter: blur(40px);
+            opacity: 0.8;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+            will-change: transform;
+            transform: translateZ(0); /* Force GPU */
+        }
+
+        .blob-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, #e10600 0%, transparent 70%);
+            top: -10%;
+            left: -10%;
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, #15151e 0%, #3a0ca3 70%);
+            bottom: -10%;
+            right: -10%;
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #4cc9f0 0%, transparent 70%);
+            top: 40%;
+            left: 40%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* 
+         * GLASSMORPHIC CONTAINER 
+         */
+        .app-container {
+            width: 90%;
+            max-width: 800px;
+            height: 85vh;
+            max-height: 700px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+
+        /* 
+         * INTRO SCREEN 
+         */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s;
+            z-index: 10;
+        }
+
+        .screen.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 20;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #fff, var(--f1-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: var(--text-glow);
+            animation: pulseTitle 3s infinite;
+        }
+
+        @keyframes pulseTitle {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        .intro-text {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: #ddd;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        .btn-start {
+            padding: 1.2rem 3rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(90deg, var(--f1-red), #ff4d4d);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: var(--neon-glow);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-start::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-start:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(225, 6, 0, 0.8);
+        }
+
+        .btn-start:hover::before {
+            left: 100%;
+        }
+
+        /* 
+         * COUNTDOWN LIGHTS 
+         */
+        .lights-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .light {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #333;
+            border: 2px solid #555;
+            transition: all 0.1s;
+        }
+
+        .light.on {
+            background: var(--f1-red);
+            box-shadow: 0 0 30px var(--f1-red);
+            border-color: #fff;
+        }
+
+        .go-signal {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--success);
+            text-shadow: 0 0 20px var(--success);
+            display: none;
+            animation: zoomIn 0.2s forwards;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* 
+         * QUIZ INTERFACE 
+         */
+        .progress-track {
+            width: 100%;
+            height: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--f1-red);
+            width: 0%;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px var(--f1-red);
+        }
+
+        .car-icon {
+            position: absolute;
+            top: -5px;
+            left: 0%;
+            font-size: 20px;
+            transition: left 0.5s ease;
+            filter: drop-shadow(0 0 5px var(--f1-red));
+            z-index: 2;
+        }
+
+        .question-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .question-text {
+            font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            width: 100%;
+        }
+
+        @media (min-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            padding: 1.2rem;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: right;
+            position: relative;
+            overflow: hidden;
+            font-family: var(--font-main);
+        }
+
+        .option-btn:hover:not([disabled]) {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .option-btn.correct {
+            background: rgba(0, 255, 157, 0.2);
+            border-color: var(--success);
+            box-shadow: 0 0 15px var(--success);
+            color: #fff;
+        }
+
+        .option-btn.wrong {
+            background: rgba(255, 0, 85, 0.2);
+            border-color: var(--error);
+            box-shadow: 0 0 15px var(--error);
+            opacity: 0.7;
+        }
+
+        .option-btn[disabled] {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        /* 
+         * TRANSITION ANIMATION (F1 CAR SWOOSH) 
+         */
+        .transition-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .transition-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .f1-car-swoosh {
+            font-size: 10rem;
+            position: absolute;
+            left: -200px;
+            filter: blur(5px);
+            opacity: 0;
+            transform: scaleX(1.5);
+        }
+
+        .swoosh-anim {
+            animation: carSwoosh 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        @keyframes carSwoosh {
+            0% { left: -200px; opacity: 0; filter: blur(10px); }
+            20% { opacity: 1; filter: blur(2px); }
+            80% { opacity: 1; filter: blur(2px); }
+            100% { left: 120%; opacity: 0; filter: blur(10px); }
+        }
+
+        /* 
+         * RESULTS SCREEN 
+         */
+        .podium {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 10px;
+            margin: 2rem 0;
+            height: 200px;
+        }
+
+        .podium-step {
+            width: 60px;
+            background: linear-gradient(to top, #333, #555);
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 10px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .step-1 { height: 100%; background: linear-gradient(to top, #ffd700, #ffec8b); color: #000; order: 2; }
+        .step-2 { height: 70%; background: linear-gradient(to top, #c0c0c0, #e8e8e8); color: #000; order: 1; }
+        .step-3 { height: 50%; background: linear-gradient(to top, #cd7f32, #e6ac80); color: #000; order: 3; }
+
+        .rank-title {
+            font-size: 2rem;
+            color: var(--f1-red);
+            margin-bottom: 1rem;
+            text-shadow: var(--neon-glow);
+        }
+
+        .score-display {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-restart {
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            background: transparent;
+            border: 2px solid var(--f1-red);
+            color: #fff;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .btn-restart:hover {
+            background: var(--f1-red);
+            box-shadow: var(--neon-glow);
+        }
+
+        /* Responsive Utilities */
+        @media (max-width: 480px) {
+            .app-container {
+                width: 95%;
+                height: 90vh;
+                border-radius: 16px;
+            }
+            .light { width: 40px; height: 40px; }
+            .f1-car-swoosh { font-size: 6rem; }
+        }
+
+        /* Reduced Motion Preference */
+        @media (prefers-reduced-motion: reduce) {
+            .blob { animation: none; }
+            .btn-start, .option-btn { transition: none; }
+            .f1-car-swoosh { animation: none; display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Liquid Background -->
+    <div class="liquid-container">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Main App Container -->
+    <main class="app-container" role="main">
+        
+        <!-- Intro Screen -->
+        <section id="intro-screen" class="screen active" aria-label="شاشة البداية">
+            <h1>F1 Ultimate Racing Quiz</h1>
+            <p class="intro-text">
+                Welcome Speed Demon! Gear up, test your aerodynamic knowledge, and see if you have what it takes to stand on the podium. Red lights are turning off...
+            </p>
+            <button id="start-btn" class="btn-start" aria-label="ابدأ السباق">
+                START RACE 🏁
+            </button>
+        </section>
+
+        <!-- Countdown Screen -->
+        <section id="countdown-screen" class="screen" aria-label="عد تنازلي">
+            <div class="lights-container" id="lights-box">
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+            </div>
+            <div id="go-signal" class="go-signal">GO!</div>
+        </section>
+
+        <!-- Quiz Screen -->
+        <section id="quiz-screen" class="screen" aria-label="مسابقة الأسئلة">
+            <div class="progress-track">
+                <div class="car-icon" id="car-position">🏎️</div>
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="question-card">
+                <h2 id="question-text" class="question-text">Loading Question...</h2>
+                <div id="options-container" class="options-grid">
+                    <!-- Options injected via JS -->
+                </div>
+            </div>
+            
+            <div style="margin-top: 1rem; color: #aaa; font-size: 0.9rem;">
+                Question <span id="current-q-num">1</span> of <span id="total-q-num">15</span>
+            </div>
+        </section>
+
+        <!-- Results Screen -->
+        <section id="results-screen" class="screen" aria-label="النتائج">
+            <h2 class="rank-title" id="rank-title">World Champion!</h2>
+            
+            <div class="podium">
+                <div class="podium-step step-2">2</div>
+                <div class="podium-step step-1">1</div>
+                <div class="podium-step step-3">3</div>
+            </div>
+
+            <p class="score-display">
+                Score: <span id="final-score" style="color: var(--success); font-weight: bold;">0</span> / 15
+            </p>
+            
+            <p id="feedback-text" style="margin-bottom: 2rem; color: #ddd;"></p>
+
+            <button id="restart-btn" class="btn-restart" aria-label="إعادة السباق">
+                RE-RACE 🔄
+            </button>
+        </section>
+
+        <!-- Transition Overlay -->
+        <div class="transition-overlay" id="transition-overlay">
+            <div class="f1-car-swoosh" id="f1-car">🏎️</div>
+        </div>
+
+    </main>
+
+    <script>
+        /**
+         * F1 QUIZ DATA
+         * Sanitized and structured for performance
+         */
+        const quizData = [
+            {
+                question: "من هو السائق الذي يحمل الرقم القياسي لأكثر عدد من بطولات العالم في الفورمولا 1 (7 بطولات بالتقاسم)؟",
+                options: ["آيرتون سينا", "مايكل شوماخر ولويس هاميلتون", "سيباستيان فيتل", "فرناندو ألونسو"],
+                correct: 1
+            },
+            {
+                question: "أي فريق هو الأقدم والأكثر نجاحاً في تاريخ الفورمولا 1؟",
+                options: ["مرسيدس", "ريد بُل", "فيراري", "ماكلارين"],
+                correct: 2
+            },
+            {
+                question: "ماذا يعني رفع \"العلم الأصفر\" خلال سباق الفورمولا 1؟",
+                options: ["إلغاء السباق", "وجود خطر على الحلبة ويجب تخفيف السرعة ومنع التجاوز", "دخول سيارة الأمان فوراً", "نهاية السباق"],
+                correct: 1
+            },
+            {
+                question: "ماذا يرمز اختصار (DRS) في سيارات الفورمولا 1؟",
+                options: ["Drag Reduction System (نظام تقليل السحب الهوائي)", "Driver Recovery System", "Downforce Regulation Standard", "Direct Racing Steering"],
+                correct: 0
+            },
+            {
+                question: "في أي عام انطلق أول موسم رسمي لبطولة العالم للفورمولا 1؟",
+                options: ["1945", "1950", "1963", "1972"],
+                correct: 1
+            },
+            {
+                question: "من هو أصغر سائق يفوز بسباق في تاريخ الفورمولا 1؟",
+                options: ["لويس هاميلتون", "سيباستيان فيتل", "ماكس فيرستابين", "تشارلز لوكلير"],
+                correct: 2
+            },
+            {
+                question: "كم عدد الإطارات الملساء (Slick Tires) الجافة التي توفرها شركة بيريللي لكل عطلة نهاية أسبوع للسباق؟",
+                options: ["3 مركبات (Soft, Medium, Hard)", "مركبتين فقط", "5 مركبات مختلفة", "نوع واحد للجميع"],
+                correct: 0
+            },
+            {
+                question: "ما هي الحلبة التي تُعرف باسم \"مونزا\" (Monza) وتلقب بهيكل السرعة؟",
+                options: ["جائزة بريطانيا الكبرى", "جائزة إيطاليا الكبرى", "جائزة موناكو الكبرى", "جائزة اليابان الكبرى"],
+                correct: 1
+            },
+            {
+                question: "ما هي العقوبة التي تجبر السائق على الدخول لمنطقة الصيانة والتوقف لـ 10 ثوانٍ دون لمس السيارة؟",
+                options: ["Drive-through", "5-second penalty", "Stop-and-go penalty", "Black flag"],
+                correct: 2
+            },
+            {
+                question: "كم تبلغ السرعة القصوى التقريبية التي يمكن أن تصل إليها سيارة F1 في المستقيمات الطويلة؟",
+                options: ["حوالي 250 كم/س", "حوالي 350-360 كم/س", "أكثر من 450 كم/س", "200 كم/س فقط"],
+                correct: 1
+            },
+            {
+                question: "ما هو الاسم الذي يُطلق على الغطاء الحامي المحيط برأس السائق لحمايته من الحوادث؟",
+                options: ["الـ Halo", "الـ Spoiler", "الـ Monocoque", "الـ Cockpit"],
+                correct: 0
+            },
+            {
+                question: "من هو السائق الأسطوري الذي لُقب بـ \"البرزيلي الطائر\" وفاز بـ 3 بطولات عالم قبل وفاته في حلبة إيمولا عام 1994؟",
+                options: ["ألان بروست", "نيلسون بيكيه", "آيرتون سينا", "نيكي لاودا"],
+                correct: 2
+            },
+            {
+                question: "أي فريق فاز بأول بطولة صانعين له في تاريخه عام 2010 بقيادة فيتل؟",
+                options: ["ريد بُل ريسينغ", "مرسيدس AMG", "رينو", "بي إم دبليو ساوبر"],
+                correct: 0
+            },
+            {
+                question: "ما هي المسافة الإجمالية التقريبية التي يجب أن يغطيها سباق الفورمولا 1 التقليدي (باستثناء موناكو)؟",
+                options: ["100 كم", "200 كم", "ما يزيد قليلاً عن 305 كم", "500 كم"],
+                correct: 2
+            },
+            {
+                question: "ماذا يعني ظهور \"العلم الأسود والأبيض\" المقسم قطرياً لسائق ما؟",
+                options: ["نهاية السباق وفوزه بالمركز الأول", "تحذير رسمي للسائق بسبب سلوك غير رياضي أو تجاوز حدود الحلبة", "استبعاده تماماً من السباق", "وجود مشكلة ميكانيكية في سيارته"],
+                correct: 1
+            }
+        ];
+
+        /**
+         * APP STATE & DOM ELEMENTS
+         */
+        const state = {
+            currentQuestion: 0,
+            score: 0,
+            isAnswering: false
+        };
+
+        // DOM Cache for Performance
+        const screens = {
+            intro: document.getElementById('intro-screen'),
+            countdown: document.getElementById('countdown-screen'),
+            quiz: document.getElementById('quiz-screen'),
+            results: document.getElementById('results-screen')
+        };
+
+        const elements = {
+            startBtn: document.getElementById('start-btn'),
+            restartBtn: document.getElementById('restart-btn'),
+            lights: document.querySelectorAll('.light'),
+            goSignal: document.getElementById('go-signal'),
+            questionText: document.getElementById('question-text'),
+            optionsContainer: document.getElementById('options-container'),
+            progressBar: document.getElementById('progress-bar'),
+            carPosition: document.getElementById('car-position'),
+            currentQNum: document.getElementById('current-q-num'),
+            totalQNum: document.getElementById('total-q-num'),
+            finalScore: document.getElementById('final-score'),
+            rankTitle: document.getElementById('rank-title'),
+            feedbackText: document.getElementById('feedback-text'),
+            transitionOverlay: document.getElementById('transition-overlay'),
+            f1Car: document.getElementById('f1-car')
+        };
+
+        /**
+         * SECURITY: Sanitize HTML to prevent XSS
+         */
+        function sanitizeHTML(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        /**
+         * NAVIGATION & TRANSITIONS
+         */
+        function switchScreen(from, to) {
+            from.classList.remove('active');
+            // Small delay to allow fade out
+            setTimeout(() => {
+                to.classList.add('active');
+            }, 500);
+        }
+
+        function triggerTransition(callback) {
+            elements.transitionOverlay.classList.add('active');
+            elements.f1Car.classList.add('swoosh-anim');
+            
+            // Play sound effect logic could go here
+            
+            setTimeout(() => {
+                callback();
+                elements.transitionOverlay.classList.remove('active');
+                elements.f1Car.classList.remove('swoosh-anim');
+            }, 800);
+        }
+
+        /**
+         * GAME LOGIC
+         */
+        function startCountdown() {
+            switchScreen(screens.intro, screens.countdown);
+            
+            let lightIndex = 0;
+            const interval = setInterval(() => {
+                if (lightIndex < 5) {
+                    elements.lights[lightIndex].classList.add('on');
+                    lightIndex++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        elements.goSignal.style.display = 'block';
+                        setTimeout(() => {
+                            startQuiz();
+                        }, 1000);
+                    }, 500);
+                }
+            }, 600); // Speed of lights
+        }
+
+        function startQuiz() {
+            state.currentQuestion = 0;
+            state.score = 0;
+            elements.totalQNum.textContent = quizData.length;
+            switchScreen(screens.countdown, screens.quiz);
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const data = quizData[state.currentQuestion];
+            
+            // Update Progress
+            const progress = ((state.currentQuestion) / quizData.length) * 100;
+            elements.progressBar.style.width = `${progress}%`;
+            elements.carPosition.style.left = `calc(${progress}% - 15px)`;
+            
+            elements.currentQNum.textContent = state.currentQuestion + 1;
+            elements.questionText.textContent = sanitizeHTML(data.question);
+            
+            // Render Options
+            elements.optionsContainer.innerHTML = '';
+            data.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt;
+                btn.onclick = () => handleAnswer(index, btn);
+                // Add keyboard accessibility
+                btn.setAttribute('role', 'button');
+                btn.setAttribute('tabindex', '0');
+                btn.onkeydown = (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleAnswer(index, btn);
+                    }
+                };
+                elements.optionsContainer.appendChild(btn);
+            });
+            
+            state.isAnswering = true;
+        }
+
+        function handleAnswer(selectedIndex, btnElement) {
+            if (!state.isAnswering) return;
+            state.isAnswering = false;
+
+            const correctIndex = quizData[state.currentQuestion].correct;
+            const allOptions = elements.optionsContainer.children;
+
+            if (selectedIndex === correctIndex) {
+                state.score++;
+                btnElement.classList.add('correct');
+            } else {
+                btnElement.classList.add('wrong');
+                // Highlight correct answer
+                allOptions[correctIndex].classList.add('correct');
+            }
+
+            // Disable all buttons
+            Array.from(allOptions).forEach(btn => btn.disabled = true);
+
+            // Next Question Delay
+            setTimeout(() => {
+                if (state.currentQuestion < quizData.length - 1) {
+                    state.currentQuestion++;
+                    triggerTransition(loadQuestion);
+                } else {
+                    finishGame();
+                }
+            }, 1500);
+        }
+
+        function finishGame() {
+            // Final Progress Update
+            elements.progressBar.style.width = '100%';
+            elements.carPosition.style.left = 'calc(100% - 15px)';
+
+            setTimeout(() => {
+                showResults();
+            }, 1000);
+        }
+
+        function showResults() {
+            elements.finalScore.textContent = state.score;
+            
+            let rank = "";
+            let feedback = "";
+            
+            if (state.score === 15) {
+                rank = "World Champion! 🏆";
+                feedback = "Perfect race! You are a legend of the track.";
+            } else if (state.score >= 12) {
+                rank = "Podium Finisher 🥈";
+                feedback = "Amazing speed! Just missed the top spot.";
+            } else if (state.score >= 8) {
+                rank = "Points Finisher 🏁";
+                feedback = "Solid drive. Keep practicing your corners.";
+            } else {
+                rank = "Pit Lane Rookie 🔧";
+                feedback = "You need more track time. Don't give up!";
+            }
+
+            elements.rankTitle.textContent = rank;
+            elements.feedbackText.textContent = feedback;
+            
+            switchScreen(screens.quiz, screens.results);
+        }
+
+        function resetGame() {
+            switchScreen(screens.results, screens.intro);
+            elements.goSignal.style.display = 'none';
+            elements.lights.forEach(l => l.classList.remove('on'));
+        }
+
+        /**
+         * EVENT LISTENERS
+         */
+        elements.startBtn.addEventListener('click', startCountdown);
+        elements.restartBtn.addEventListener('click', resetGame);
+
+        // Keyboard Navigation for Start Button
+        document.addEventListener('keydown', (e) => {
+            if (screens.intro.classList.contains('active') && e.key === 'Enter') {
+                startCountdown();
+            }
+        });
+
+        // Performance Optimization: Detect low-end devices
+        if (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) {
+            document.documentElement.style.setProperty('--blur-amount', '10px');
+            // Could reduce animation complexity here if needed
+        }
+
+    </script>
+</body>
+</html>
